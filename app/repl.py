@@ -24,6 +24,7 @@ class REPL:
         
     def start(self):
         print("Advanced Python Calculator - Type 'menu' to see available commands.")
+        print("Example: add 2 3")
         while True:
             user_input = input(">> ").strip().split()
             if not user_input:
