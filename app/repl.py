@@ -21,3 +21,21 @@ class REPL:
             'quit': self._quit
         }
         logging.basicConfig(level=logging.INFO)
+        
+    def start(self):
+        print("Advanced Python Calculator - Type 'menu' to see available commands.")
+        while True:
+            user_input = input(">> ").strip().split()
+            if not user_input:
+                continue
+            command = user_input[0].lower()
+            args = user_input[1:]
+
+            if command in self.commands:
+                try:
+                    self.commands[command](*args)
+                except Exception as e:
+                    logging.error(f"Error executing command '{command}': {e}")
+                    print(f"Error: {e}")
+            else:
+                print(f"Unknown command: {command}")
