@@ -1,3 +1,4 @@
+# app/history_manager.py
 import pandas as pd
 import os
 
@@ -16,7 +17,9 @@ class HistoryManager:
         self.history.to_csv(self.history_file, index=False)
 
     def record(self, record):
-        self.history = self.history.append(record, ignore_index=True)
+        # Create a DataFrame from the record and concatenate it to the existing history
+        new_record = pd.DataFrame([record])
+        self.history = pd.concat([self.history, new_record], ignore_index=True)
         self.save_history()
 
     def get_history(self):
