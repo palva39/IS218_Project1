@@ -17,10 +17,13 @@ class HistoryManager:
         self.history.to_csv(self.history_file, index=False)
 
     def record(self, record):
-        # Create a DataFrame from the record and concatenate it to the existing history
+        # Create a DataFrame from the record
         new_record = pd.DataFrame([record])
-        self.history = pd.concat([self.history, new_record], ignore_index=True)
-        self.save_history()
+
+        # Check if the new_record is not empty before concatenating
+        if not new_record.empty and not new_record.isna().all().all():
+            self.history = pd.concat([self.history, new_record], ignore_index=True)
+            self.save_history()
 
     def get_history(self):
         return self.history.to_string(index=False)
