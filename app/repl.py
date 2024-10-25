@@ -33,10 +33,7 @@ class REPL:
 
             if command in self.commands:
                 try:
-                    # Execute the command and check if it returns a result
-                    result = self.commands[command](*args)
-                    if result is not None and command not in ['history', 'clear_history', 'load_plugin', 'menu', 'quit']:
-                        print(f"Result: {result}")
+                    self.commands[command](*args)
                 except Exception as e:
                     logging.error(f"Error executing command '{command}': {e}")
                     print(f"Error: {e}")
@@ -62,6 +59,7 @@ class REPL:
     def _record_and_print(self, operation, a, b, result):
         record = {'operation': operation, 'a': a, 'b': b, 'result': result}
         self.history_manager.record(record)
+        print(f"Result: {result}")
 
     def _show_history(self):
         print("Calculation History:")
@@ -72,33 +70,8 @@ class REPL:
         print("History cleared.")
 
     def _load_plugin(self, plugin_name):
-        try:
-            self.plugin_loader.load_plugin(plugin_name)
-            plugin = self.plugin_loader.plugins[plugin_name]
-            
-            # Dynamically add plugin functions to REPL with history saving
-            for func_name in dir(plugin):
-                if not func_name.startswith('_'):
-                    func = getattr(plugin, func_name)
-
-                    # Create a wrapper function that handles plugin operations and saves to history
-                    def wrapped_func(*args, func=func, func_name=func_name):
-                        # Convert arguments to floats and execute the plugin function
-                        result = func(*map(float, args))
-                        # Record the plugin operation to history
-                        if len(args) == 1:
-                            a, b = args[0], None
-                        else:
-                            a, b = args[0], args[1]
-                        self._record_and_print(func_name, a, b, result)
-                        return result
-                    
-                    # Add the wrapped function to REPL commands
-                    self.commands[func_name] = wrapped_func
-                    
-            print(f"Plugin '{plugin_name}' loaded successfully.")
-        except ImportError as e:
-            print(f"Error loading plugin: {e}")
+        self.plugin_loader.load_plugin(plugin_name)
+        print(f"Plugin '{plugin_name}' loaded.")
 
     def _menu(self):
         print("Available commands:")
