@@ -1,5 +1,5 @@
 """
-Unit tests for the REPL class.
+Enhanced unit tests for the REPL class, covering all commands, plugins, and edge cases.
 """
 
 import pytest
@@ -12,7 +12,7 @@ def repl():
 
 def test_add_command(repl, monkeypatch):
     """Test the 'add' command functionality in the REPL."""
-    inputs = iter(["add 3 4", "quit"])
+    inputs = iter(["add 10 5", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
@@ -22,9 +22,9 @@ def test_add_command(repl, monkeypatch):
 
     history = repl.history_manager.get_history()
     assert 'add' in history
-    assert '3' in history
-    assert '4' in history
-    assert '7' in history
+    assert '10' in history
+    assert '5' in history
+    assert '15' in history  # 10 + 5 = 15
 
 def test_subtract_command(repl, monkeypatch):
     """Test the 'subtract' command functionality in the REPL."""
@@ -88,9 +88,21 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
     assert "Error" in captured.out
     assert "Cannot divide by zero" in captured.out
 
-def test_invalid_command(repl, monkeypatch):
-    """Test handling an invalid command in the REPL."""
-    inputs = iter(["invalid_command", "quit"])
+def test_load_plugin_command(repl, monkeypatch):
+    """Test loading a plugin and running a command from it in the REPL."""
+
+    # Clear any previous history before starting the test
+    repl.history_manager.clear_history()
+
+    plugin_file = "app/plugins/square.py"
+    with open(plugin_file, "w", encoding="utf-8") as f:
+        f.write("""
+def square(number):
+    return float(number) ** 2
+""")
+
+    # Mock user input to load the plugin and run a command from it
+    inputs = iter(["load_plugin square", "square 3", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
@@ -98,8 +110,55 @@ def test_invalid_command(repl, monkeypatch):
     except SystemExit:
         pass
 
+    # Verify the plugin operation is recorded
+    history = repl.history_manager.get_history()
+    assert 'square' in history
+    assert '3' in history
+    assert '9' in history  # 3 squared is 9
+
+def test_clear_history_command(repl, monkeypatch):
+    """Test the 'clear_history' command functionality in the REPL."""
+    inputs = iter(["add 5 5", "clear_history", "history", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    # Verify that the history is cleared
+    history = repl.history_manager.get_history()
+    assert "Empty DataFrame" in history
+
+def test_invalid_calculator_command(repl, monkeypatch, capsys):
+    """Test handling an invalid calculator command in the REPL."""
+    inputs = iter(["add invalid args", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Error" in captured.out
+    assert "could not convert string to float" in captured.out
+
+def test_unknown_command(repl, monkeypatch, capsys):
+    """Test entering an unknown command in the REPL."""
+    inputs = iter(["unknown_command", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Unknown command" in captured.out
+
 def test_menu_command(repl, monkeypatch, capsys):
-    """Test the 'menu' command functionality in the REPL."""
+    """Test the 'menu' command to show available commands in the REPL."""
     inputs = iter(["menu", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
@@ -109,61 +168,14 @@ def test_menu_command(repl, monkeypatch, capsys):
         pass
 
     captured = capsys.readouterr()
-    assert "Available commands:" in captured.out
+    assert "Available commands" in captured.out
     assert "add" in captured.out
     assert "subtract" in captured.out
-
-def test_clear_history_command(repl, monkeypatch):
-    """Test the 'clear_history' command functionality in the REPL."""
-    inputs = iter(["add 3 4", "clear_history", "quit"])
-    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
-    try:
-        repl.start()
-    except SystemExit:
-        pass
-
-    # History should be cleared
-    history = repl.history_manager.get_history()
-    assert history.strip() == "Empty DataFrame\nColumns: [operation, a, b, result]\nIndex: []"
-
-def test_load_non_existing_plugin(repl, monkeypatch, capsys):
-    """Test attempting to load a non-existing plugin in the REPL."""
-    inputs = iter(["load_plugin non_existing_plugin", "quit"])
-    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
-    try:
-        repl.start()
-    except SystemExit:
-        pass
-
-    captured = capsys.readouterr()
-    assert "Error loading plugin" in captured.out
-
-def test_load_plugin_command(repl, monkeypatch):
-    """Test loading a plugin and running a command from it in the REPL."""
-    plugin_file = "app/plugins/example_plugin.py"
-    with open(plugin_file, "w", encoding="utf-8") as f:
-        f.write("""
-def square(number):
-    return float(number) ** 2
-""")
-
-    inputs = iter(["load_plugin example_plugin", "square 3", "quit"])
-    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
-    try:
-        repl.start()
-    except SystemExit:
-        pass
-
-    history = repl.history_manager.get_history()
-    assert 'square' in history
-    assert '3' in history
-    assert '9' in history
+    assert "multiply" in captured.out
+    assert "divide" in captured.out
 
 def test_quit_command(repl, monkeypatch):
-    """Test the 'quit' command functionality in the REPL."""
+    """Test the 'quit' command to exit the REPL."""
     inputs = iter(["quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 

@@ -49,3 +49,13 @@ def test_load_and_save_history(history_manager):
     assert '2' in history
     assert '3' in history
     assert '6' in history
+
+def test_invalid_record(history_manager):
+    """Test attempting to record an invalid calculation entry."""
+    # An invalid record should not raise errors, but should not be saved
+    invalid_record = {'operation': 'add', 'a': 1, 'b': None, 'result': None}
+    history_manager.record(invalid_record)
+
+    # The history should not contain the invalid record
+    history = history_manager.get_history()
+    assert 'None' not in history
