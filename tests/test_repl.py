@@ -15,7 +15,7 @@ def test_add_command(repl, monkeypatch):
     # Mock user input for the REPL
     inputs = iter(["add 3 4", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-    
+
     # Run the REPL and handle SystemExit gracefully
     try:
         repl.start()  # This will run the REPL once with "add 3 4"
