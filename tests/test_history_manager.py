@@ -3,7 +3,6 @@ Unit tests for the HistoryManager class.
 """
 
 import pytest
-import os
 from app.history_manager import HistoryManager
 
 @pytest.fixture
@@ -33,8 +32,9 @@ def test_clear_history(history_manager):
 
     # Clear the history and verify it's empty
     history_manager.clear_history()
-    history = history_manager.get_history()
-    assert history.strip() == ""
+
+    # Check if the DataFrame is truly empty
+    assert history_manager.history.empty
 
 def test_load_and_save_history(history_manager):
     """Test loading and saving history from a file."""
