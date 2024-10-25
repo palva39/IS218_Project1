@@ -99,3 +99,11 @@ def square(number):
     assert 'square' in history
     assert '3' in history
     assert '9' in history
+
+def test_quit_command(repl, monkeypatch):
+    """Test the 'quit' command functionality in the REPL."""
+    inputs = iter(["quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    with pytest.raises(SystemExit):
+        repl.start()
