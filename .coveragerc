@@ -4,3 +4,4 @@ omit =
     /usr/lib/python3/dist-packages/*
     tests/__init__.py
     app/logging_config.py
+    app/plugins/example_plugin.py
