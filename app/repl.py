@@ -21,10 +21,9 @@ class REPL:
             'quit': self._quit
         }
         logging.basicConfig(level=logging.INFO)
-        
+
     def start(self):
         print("Advanced Python Calculator - Type 'menu' to see available commands.")
-        print("Example: add 2 3")
         while True:
             user_input = input(">> ").strip().split()
             if not user_input:
@@ -40,7 +39,7 @@ class REPL:
                     print(f"Error: {e}")
             else:
                 print(f"Unknown command: {command}")
-    
+
     def _add(self, a, b):
         result = self.calculator.add(float(a), float(b))
         self._record_and_print("add", a, b, result)
@@ -71,8 +70,17 @@ class REPL:
         print("History cleared.")
 
     def _load_plugin(self, plugin_name):
-        self.plugin_loader.load_plugin(plugin_name)
-        print(f"Plugin '{plugin_name}' loaded.")
+        try:
+            self.plugin_loader.load_plugin(plugin_name)
+            # Add plugin commands dynamically to REPL
+            plugin = self.plugin_loader.plugins[plugin_name]
+            for func_name in dir(plugin):
+                if not func_name.startswith('_'):
+                    # Bind the plugin function to a new REPL command
+                    self.commands[func_name] = getattr(plugin, func_name)
+            print(f"Plugin '{plugin_name}' loaded successfully.")
+        except ImportError as e:
+            print(f"Error loading plugin: {e}")
 
     def _menu(self):
         print("Available commands:")
