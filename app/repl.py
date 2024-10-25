@@ -60,11 +60,8 @@ class REPL:
 
     def _record_and_print(self, operation, a, b, result):
         logging.info(f"Recording operation: {operation} with operands {a}, {b} and result {result}")
-        print(f"Debug: Recording operation: {operation} with operands {a}, {b} and result {result}")
-        
         record = {'operation': operation, 'a': a, 'b': b, 'result': result}
         self.history_manager.record(record)
-        print(f"Debug: Recorded to history: {self.history_manager.get_history()}")
         print(f"Result: {result}")
 
     def _show_history(self):
@@ -97,8 +94,6 @@ class REPL:
                         a = args[0] if len(args) > 0 else None
                         b = args[1] if len(args) > 1 else ''  # Use empty string for plugins with a single argument
                         
-                        # Debug print to ensure correct data handling
-                        logging.debug(f"Recording plugin operation '{func_name}' with result {result} and operands {a}, {b}")
                         
                         # Record to history
                         self._record_and_print(func_name, a, b, result)

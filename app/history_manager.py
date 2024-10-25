@@ -16,15 +16,9 @@ class HistoryManager:
         # Ensure the record contains all required fields
         if all(key in record for key in ['operation', 'a', 'b', 'result']) and not any(pd.isna(value) for value in record.values()):
             try:
-                # Debug output for the incoming record
-                print(f"Debug: Incoming record for saving: {record}")
-
                 # Use PandasFacade to handle DataFrame concatenation
                 new_record = pd.DataFrame([record])
                 self.history = PandasFacade.concat_dataframes(self.history, record)
-
-                # Debug to verify DataFrame state after concatenation
-                print(f"Debug: History DataFrame after concat: \n{self.history}")
 
                 self.save_history()
             except Exception as e:
