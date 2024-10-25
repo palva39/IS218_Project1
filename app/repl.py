@@ -116,9 +116,52 @@ class REPL:
 
     def _menu(self):
         logging.info("Displaying available commands.")
-        print("Available commands:")
-        for command in self.commands.keys():
-            print(f"- {command}")
+    
+        print("\n=== Available Commands ===")
+        
+        # Basic calculation commands with usage examples
+        print("\n-- Basic Calculation Commands --")
+        print("add <number1> <number2>        : Add two numbers.")
+        print("  Example: add 10 5            -> Result: 15.0")
+        
+        print("subtract <number1> <number2>   : Subtract second number from the first.")
+        print("  Example: subtract 10 5       -> Result: 5.0")
+        
+        print("multiply <number1> <number2>   : Multiply two numbers.")
+        print("  Example: multiply 10 5       -> Result: 50.0")
+        
+        print("divide <number1> <number2>     : Divide first number by the second.")
+        print("  Example: divide 10 2         -> Result: 5.0")
+        
+        # Plugins with usage examples
+        print("\n-- Plugin Commands --")
+        print("power <base> <exponent>        : Raise a base number to the power of the exponent.")
+        print("  Example: power 2 3           -> Result: 8.0 (2^3)")
+        
+        print("factorial <number>             : Calculate the factorial of a number.")
+        print("  Example: factorial 5         -> Result: 120")
+        
+        print("square_root <number>           : Calculate the square root of a number.")
+        print("  Example: square_root 16      -> Result: 4.0")
+        
+        print("sine <angle>                   : Calculate the sine of an angle (in degrees).")
+        print("  Example: sine 30             -> Result: 0.5")
+        
+        print("cosine <angle>                 : Calculate the cosine of an angle (in degrees).")
+        print("  Example: cosine 60           -> Result: 0.5")
+        
+        print("tangent <angle>                : Calculate the tangent of an angle (in degrees).")
+        print("  Example: tangent 45          -> Result: 1.0")
+        
+        # Other available commands
+        print("\n-- General Commands --")
+        print("history                        : Display calculation history.")
+        print("clear_history                  : Clear the calculation history.")
+        print("load_plugin <plugin_name>      : Load a plugin by its name.")
+        print("  Example: load_plugin square_root")
+        print("menu                           : Show this menu.")
+        print("quit                           : Exit the REPL.")
+        print("\n===========================\n")
 
     def _quit(self):
         logging.info("Exiting the REPL application.")
