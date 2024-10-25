@@ -1,5 +1,5 @@
 """
-Unit tests for the REPL class, covering all basic commands.
+Enhanced unit tests for the REPL class, covering all commands, plugins, and edge cases.
 """
 
 import pytest
@@ -90,7 +90,7 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
 
 def test_load_plugin_command(repl, monkeypatch):
     """Test loading a plugin and running a command from it in the REPL."""
-
+    
     # Clear any previous history before starting the test
     repl.history_manager.clear_history()
 
@@ -116,6 +116,20 @@ def square(number):
     assert '3' in history
     assert '9' in history  # 3 squared is 9
 
+def test_clear_history_command(repl, monkeypatch):
+    """Test the 'clear_history' command functionality in the REPL."""
+    inputs = iter(["add 5 5", "clear_history", "history", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    # Verify that the history is cleared
+    history = repl.history_manager.get_history()
+    assert "Empty DataFrame" in history
+
 def test_invalid_calculator_command(repl, monkeypatch, capsys):
     """Test handling an invalid calculator command in the REPL."""
     inputs = iter(["add invalid args", "quit"])
@@ -130,16 +144,9 @@ def test_invalid_calculator_command(repl, monkeypatch, capsys):
     assert "Error" in captured.out
     assert "could not convert string to float" in captured.out
 
-def test_unknown_plugin_function(repl, monkeypatch):
-    """Test running an unknown function from a loaded plugin."""
-    plugin_file = "app/plugins/unknown_plugin.py"
-    with open(plugin_file, "w", encoding="utf-8") as f:
-        f.write("""
-def unknown_function(number):
-    return number * 2
-""")
-
-    inputs = iter(["load_plugin unknown_plugin", "unknown_function 3", "quit"])
+def test_unknown_command(repl, monkeypatch, capsys):
+    """Test entering an unknown command in the REPL."""
+    inputs = iter(["unknown_command", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
@@ -147,8 +154,30 @@ def unknown_function(number):
     except SystemExit:
         pass
 
-    # Ensure unknown function handling doesn't break the REPL
-    history = repl.history_manager.get_history()
-    assert 'unknown_function' in history
-    assert '3' in history
-    assert '6' in history  # 3 * 2 = 6
+    captured = capsys.readouterr()
+    assert "Unknown command" in captured.out
+
+def test_menu_command(repl, monkeypatch, capsys):
+    """Test the 'menu' command to show available commands in the REPL."""
+    inputs = iter(["menu", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Available commands" in captured.out
+    assert "add" in captured.out
+    assert "subtract" in captured.out
+    assert "multiply" in captured.out
+    assert "divide" in captured.out
+
+def test_quit_command(repl, monkeypatch):
+    """Test the 'quit' command to exit the REPL."""
+    inputs = iter(["quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    with pytest.raises(SystemExit):
+        repl.start()
