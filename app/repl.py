@@ -35,7 +35,7 @@ class REPL:
                 try:
                     # Execute the command and check if it returns a result
                     result = self.commands[command](*args)
-                    if result is not None:
+                    if result is not None and command not in ['history', 'clear_history', 'load_plugin', 'menu', 'quit']:
                         print(f"Result: {result}")
                 except Exception as e:
                     logging.error(f"Error executing command '{command}': {e}")
@@ -62,7 +62,6 @@ class REPL:
     def _record_and_print(self, operation, a, b, result):
         record = {'operation': operation, 'a': a, 'b': b, 'result': result}
         self.history_manager.record(record)
-        print(f"Result: {result}")
 
     def _show_history(self):
         print("Calculation History:")
