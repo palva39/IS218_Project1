@@ -35,3 +35,13 @@ def test_load_invalid_plugin(plugin_loader):
     """Test loading an invalid plugin with unexpected errors."""
     with pytest.raises(ImportError):
         plugin_loader.load_plugin('invalid_plugin_with_error')
+
+def test_load_plugin_with_import_error(monkeypatch, plugin_loader):
+    """Test loading a plugin that raises an ImportError."""
+    def mock_import_module(module_name):
+        raise ImportError("Simulated import error.")
+
+    monkeypatch.setattr('importlib.import_module', mock_import_module)
+
+    with pytest.raises(ImportError):
+        plugin_loader.load_plugin('non_existing_plugin')
