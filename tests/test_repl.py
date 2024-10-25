@@ -74,7 +74,7 @@ def test_load_non_existing_plugin(repl, monkeypatch, capsys):
         repl.start()
     except SystemExit:
         pass
-    
+
     captured = capsys.readouterr()
     assert "Error loading plugin" in captured.out
 
