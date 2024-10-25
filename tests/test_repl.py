@@ -26,6 +26,68 @@ def test_add_command(repl, monkeypatch):
     assert '4' in history
     assert '7' in history
 
+def test_subtract_command(repl, monkeypatch):
+    """Test the 'subtract' command functionality in the REPL."""
+    inputs = iter(["subtract 10 5", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    history = repl.history_manager.get_history()
+    assert 'subtract' in history
+    assert '10' in history
+    assert '5' in history
+    assert '5' in history  # 10 - 5 = 5
+
+def test_multiply_command(repl, monkeypatch):
+    """Test the 'multiply' command functionality in the REPL."""
+    inputs = iter(["multiply 10 5", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    history = repl.history_manager.get_history()
+    assert 'multiply' in history
+    assert '10' in history
+    assert '5' in history
+    assert '50' in history  # 10 * 5 = 50
+
+def test_divide_command(repl, monkeypatch):
+    """Test the 'divide' command functionality in the REPL."""
+    inputs = iter(["divide 10 2", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    history = repl.history_manager.get_history()
+    assert 'divide' in history
+    assert '10' in history
+    assert '2' in history
+    assert '5' in history  # 10 / 2 = 5
+
+def test_divide_by_zero_command(repl, monkeypatch, capsys):
+    """Test the 'divide' command with division by zero in the REPL."""
+    inputs = iter(["divide 10 0", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Error" in captured.out
+    assert "Cannot divide by zero" in captured.out
+
 def test_invalid_command(repl, monkeypatch):
     """Test handling an invalid command in the REPL."""
     inputs = iter(["invalid_command", "quit"])
