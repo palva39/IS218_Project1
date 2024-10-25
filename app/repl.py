@@ -55,8 +55,11 @@ class REPL:
 
     def _record_and_print(self, operation, a, b, result):
         logging.info(f"Recording operation: {operation} with operands {a}, {b} and result {result}")
+        print(f"Debug: Recording operation: {operation} with operands {a}, {b} and result {result}")
+        
         record = {'operation': operation, 'a': a, 'b': b, 'result': result}
         self.history_manager.record(record)
+        print(f"Debug: Recorded to history: {self.history_manager.get_history()}")
         print(f"Result: {result}")
 
     def _show_history(self):
