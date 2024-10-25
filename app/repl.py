@@ -11,7 +11,7 @@ class REPL:
         self.history_manager = HistoryManager()
         self.plugin_loader = PluginLoader()
         self.commands = {
-              'add': AddCommand(self.calculator),
+            'add': AddCommand(self.calculator),
             'subtract': SubtractCommand(self.calculator),
             'multiply': MultiplyCommand(self.calculator),
             'divide': DivideCommand(self.calculator),
