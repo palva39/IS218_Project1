@@ -88,10 +88,14 @@ class REPL:
                         logging.debug(f"Executing plugin function '{func_name}' with arguments {args}")
                         result = func(*map(float, args))
                         
-                        # Record the plugin operation to history
+                        # Ensure consistent recording data structure
                         a = args[0] if len(args) > 0 else None
-                        b = args[1] if len(args) > 1 else None
-                        logging.debug(f"Recording plugin operation '{func_name}' with result {result}")
+                        b = args[1] if len(args) > 1 else ''  # Use empty string for plugins with a single argument
+                        
+                        # Debug print to ensure correct data handling
+                        logging.debug(f"Recording plugin operation '{func_name}' with result {result} and operands {a}, {b}")
+                        
+                        # Record to history
                         self._record_and_print(func_name, a, b, result)
                         
                         return result  # Return the result instead of printing it
