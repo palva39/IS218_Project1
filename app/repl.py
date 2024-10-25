@@ -86,20 +86,21 @@ class REPL:
             logging.info(f"Loading plugin: {plugin_name}")
             self.plugin_loader.load_plugin(plugin_name)
             plugin = self.plugin_loader.plugins[plugin_name]
-
+            
             for func_name in dir(plugin):
                 if not func_name.startswith('_'):
                     func = getattr(plugin, func_name)
 
+                    # Use the correct method to handle recording and printing
                     def wrapped_func(*args, func=func, func_name=func_name):
                         result = func(*map(float, args))
                         a = args[0] if len(args) > 0 else None
                         b = args[1] if len(args) > 1 else None
-                        self._record_to_history(func_name, a, b, result)
+                        self._record_and_print(func_name, a, b, result)
                         return result
-
+                    
                     self.commands[func_name] = wrapped_func
-
+                    
             print(f"Plugin '{plugin_name}' loaded successfully.")
         except ImportError as e:
             logging.error(f"Failed to load plugin '{plugin_name}': {e}")
