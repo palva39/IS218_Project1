@@ -94,7 +94,7 @@ def test_load_plugin_command(repl, monkeypatch):
     # Clear any previous history before starting the test
     repl.history_manager.clear_history()
 
-    plugin_file = "app/plugins/example_plugin.py"
+    plugin_file = "app/plugins/square.py"
     with open(plugin_file, "w", encoding="utf-8") as f:
         f.write("""
 def square(number):
