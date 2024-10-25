@@ -50,20 +50,6 @@ def test_load_and_save_history(history_manager):
     assert '3' in history
     assert '6' in history
 
-def test_load_and_save_history(history_manager):
-    """Test loading and saving history from a file."""
-    # Test loading and saving functionality
-    record = {'operation': 'divide', 'a': 12, 'b': 2, 'result': 6}
-    history_manager.record(record)
-
-    # Reload the history manager to simulate loading from file
-    new_history_manager = HistoryManager(history_file=history_manager.history_file)
-    history = new_history_manager.get_history()
-    assert 'divide' in history
-    assert '12' in history
-    assert '2' in history
-    assert '6' in history
-
 def test_invalid_record(history_manager):
     """Test attempting to record an invalid calculation entry."""
     # An invalid record should not raise errors, but should not be saved
