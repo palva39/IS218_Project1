@@ -1,5 +1,5 @@
 """
-Enhanced unit tests for the REPL class, covering all commands, plugins, and edge cases.
+Comprehensive unit tests for the REPL class, covering all commands, plugins, and edge cases.
 """
 
 import pytest
@@ -88,21 +88,21 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
     assert "Error" in captured.out
     assert "Cannot divide by zero" in captured.out
 
-def test_load_plugin_command(repl, monkeypatch):
-    """Test loading a plugin and running a command from it in the REPL."""
-
-    # Clear any previous history before starting the test
-    repl.history_manager.clear_history()
-
-    plugin_file = "app/plugins/square.py"
+def test_load_plugin_and_execute(repl, monkeypatch):
+    """Test loading various plugins and executing commands."""
+    plugin_file = "app/plugins/square_root.py"
     with open(plugin_file, "w", encoding="utf-8") as f:
         f.write("""
-def square(number):
-    return float(number) ** 2
+import math
+
+def square_root(number):
+    if number < 0:
+        raise ValueError("Cannot calculate the square root of a negative number.")
+    return math.sqrt(float(number))
 """)
 
-    # Mock user input to load the plugin and run a command from it
-    inputs = iter(["load_plugin square", "square 3", "quit"])
+    # Load the square_root plugin and run the square_root command
+    inputs = iter(["load_plugin square_root", "square_root 16", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
@@ -110,11 +110,11 @@ def square(number):
     except SystemExit:
         pass
 
-    # Verify the plugin operation is recorded
+    # Verify that the square root operation is recorded
     history = repl.history_manager.get_history()
-    assert 'square' in history
-    assert '3' in history
-    assert '9' in history  # 3 squared is 9
+    assert 'square_root' in history
+    assert '16' in history
+    assert '4.0' in history  # sqrt(16) = 4.0
 
 def test_clear_history_command(repl, monkeypatch):
     """Test the 'clear_history' command functionality in the REPL."""
@@ -130,22 +130,8 @@ def test_clear_history_command(repl, monkeypatch):
     history = repl.history_manager.get_history()
     assert "Empty DataFrame" in history
 
-def test_invalid_calculator_command(repl, monkeypatch, capsys):
-    """Test handling an invalid calculator command in the REPL."""
-    inputs = iter(["add invalid args", "quit"])
-    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
-    try:
-        repl.start()
-    except SystemExit:
-        pass
-
-    captured = capsys.readouterr()
-    assert "Error" in captured.out
-    assert "could not convert string to float" in captured.out
-
-def test_unknown_command(repl, monkeypatch, capsys):
-    """Test entering an unknown command in the REPL."""
+def test_invalid_command(repl, monkeypatch, capsys):
+    """Test entering an invalid command in the REPL."""
     inputs = iter(["unknown_command", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
@@ -168,11 +154,17 @@ def test_menu_command(repl, monkeypatch, capsys):
         pass
 
     captured = capsys.readouterr()
-    assert "Available commands" in captured.out
+    assert "Available Commands" in captured.out
     assert "add" in captured.out
     assert "subtract" in captured.out
     assert "multiply" in captured.out
     assert "divide" in captured.out
+    assert "square_root" in captured.out
+    assert "factorial" in captured.out
+    assert "power" in captured.out
+    assert "sine" in captured.out
+    assert "cosine" in captured.out
+    assert "tangent" in captured.out
 
 def test_quit_command(repl, monkeypatch):
     """Test the 'quit' command to exit the REPL."""

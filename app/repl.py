@@ -60,11 +60,8 @@ class REPL:
 
     def _record_and_print(self, operation, a, b, result):
         logging.info(f"Recording operation: {operation} with operands {a}, {b} and result {result}")
-        print(f"Debug: Recording operation: {operation} with operands {a}, {b} and result {result}")
-        
         record = {'operation': operation, 'a': a, 'b': b, 'result': result}
         self.history_manager.record(record)
-        print(f"Debug: Recorded to history: {self.history_manager.get_history()}")
         print(f"Result: {result}")
 
     def _show_history(self):
@@ -97,8 +94,6 @@ class REPL:
                         a = args[0] if len(args) > 0 else None
                         b = args[1] if len(args) > 1 else ''  # Use empty string for plugins with a single argument
                         
-                        # Debug print to ensure correct data handling
-                        logging.debug(f"Recording plugin operation '{func_name}' with result {result} and operands {a}, {b}")
                         
                         # Record to history
                         self._record_and_print(func_name, a, b, result)
@@ -116,9 +111,47 @@ class REPL:
 
     def _menu(self):
         logging.info("Displaying available commands.")
-        print("Available commands:")
-        for command in self.commands.keys():
-            print(f"- {command}")
+    
+        print("\n=== Available Commands ===")
+        
+        # Basic calculation commands with usage examples
+        print("\n-- Basic Calculation Commands --")
+        print("add <number1> <number2>        : Add two numbers.")
+        
+        print("subtract <number1> <number2>   : Subtract second number from the first.")
+        
+        print("multiply <number1> <number2>   : Multiply two numbers.")
+
+        print("divide <number1> <number2>     : Divide first number by the second.")
+    
+        
+        # Plugins with usage examples
+        print("\n-- Plugin Commands --")
+        
+        print("square <base> <exponent>        : Raise a base number to the power of 2.")
+        
+        print("power <base> <exponent>        : Raise a base number to the power of the exponent.")
+        
+        print("factorial <number>             : Calculate the factorial of a number.")
+        
+        print("square_root <number>           : Calculate the square root of a number.")
+        
+        print("sine <angle>                   : Calculate the sine of an angle (in degrees).")
+        
+        print("cosine <angle>                 : Calculate the cosine of an angle (in degrees).")
+        
+        print("tangent <angle>                : Calculate the tangent of an angle (in degrees).")
+        
+        # Other available commands
+        print("\n-- General Commands --")
+        print("history                        : Display calculation history.")
+        print("clear_history                  : Clear the calculation history.")
+        print("load_plugin <plugin_name>      : Load a plugin by its name.")
+        print("  \nPluginNames: factorial      power       square_root     trig        square")
+        print("  Example: load_plugin square_root\n")
+        print("menu                           : Show this menu.")
+        print("quit                           : Exit the REPL.")
+        print("\n===========================\n")
 
     def _quit(self):
         logging.info("Exiting the REPL application.")
