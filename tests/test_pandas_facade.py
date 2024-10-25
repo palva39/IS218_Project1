@@ -17,8 +17,8 @@ def test_load_csv_failure(monkeypatch):
     df = PandasFacade.load_csv('non_existing_file.csv')
     assert df.empty  # Should return an empty DataFrame on error
 
-def test_save_csv_failure(monkeypatch):
-    """Test saving a CSV file with an error."""
+def test_save_csv_failure(monkeypatch, capsys):
+    """Test saving a CSV file with an error and verify error handling."""
     def mock_to_csv(self, file_path, index):
         raise IOError("Simulated file write error.")
 
@@ -26,17 +26,17 @@ def test_save_csv_failure(monkeypatch):
 
     # Attempt to save a DataFrame that raises an IOError
     dataframe = pd.DataFrame({'a': [1], 'b': [2]})
-    try:
-        PandasFacade.save_csv(dataframe, 'test.csv')
-        pytest.fail("Expected an IOError.")
-    except IOError:
-        pass  # Expected error
+    PandasFacade.save_csv(dataframe, 'test.csv')
+
+    # Capture the standard output to verify error handling
+    captured = capsys.readouterr()
+    assert "Error saving CSV file: Simulated file write error." in captured.out
 
 def test_concat_dataframes_with_empty_dataframe():
     """Test concatenating DataFrames when one is empty."""
     df1 = pd.DataFrame(columns=['a', 'b'])
     df2 = pd.DataFrame({'a': [1], 'b': [2]})
-    
+
     # Should handle empty DataFrame properly
     result = PandasFacade.concat_dataframes(df1, {'a': 1, 'b': 2})
     assert not result.empty
