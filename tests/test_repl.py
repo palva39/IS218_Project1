@@ -12,26 +12,74 @@ def repl():
 
 def test_add_command(repl, monkeypatch):
     """Test the 'add' command functionality in the REPL."""
-    # Mock user input for the REPL
     inputs = iter(["add 3 4", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
-    # Run the REPL and handle SystemExit gracefully
     try:
-        repl.start()  # This will run the REPL once with "add 3 4"
+        repl.start()
     except SystemExit:
         pass
 
-    # History should have the add command
     history = repl.history_manager.get_history()
     assert 'add' in history
     assert '3' in history
     assert '4' in history
-    assert '7' in history  # 3 + 4 = 7
+    assert '7' in history
+
+def test_invalid_command(repl, monkeypatch):
+    """Test handling an invalid command in the REPL."""
+    inputs = iter(["invalid_command", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+def test_menu_command(repl, monkeypatch, capsys):
+    """Test the 'menu' command functionality in the REPL."""
+    inputs = iter(["menu", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Available commands:" in captured.out
+    assert "add" in captured.out
+    assert "subtract" in captured.out
+
+def test_clear_history_command(repl, monkeypatch):
+    """Test the 'clear_history' command functionality in the REPL."""
+    inputs = iter(["add 3 4", "clear_history", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    # History should be cleared
+    history = repl.history_manager.get_history()
+    assert history.strip() == "Empty DataFrame\nColumns: [operation, a, b, result]\nIndex: []"
+
+def test_load_non_existing_plugin(repl, monkeypatch, capsys):
+    """Test attempting to load a non-existing plugin in the REPL."""
+    inputs = iter(["load_plugin non_existing_plugin", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+    
+    captured = capsys.readouterr()
+    assert "Error loading plugin" in captured.out
 
 def test_load_plugin_command(repl, monkeypatch):
     """Test loading a plugin and running a command from it in the REPL."""
-    # Ensure the 'example_plugin.py' file exists in 'app/plugins'
     plugin_file = "app/plugins/example_plugin.py"
     with open(plugin_file, "w") as f:
         f.write("""
@@ -39,18 +87,15 @@ def square(number):
     return float(number) ** 2
 """)
 
-    # Mock user input to load a plugin and run a command
     inputs = iter(["load_plugin example_plugin", "square 3", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
-    # Run the REPL and handle SystemExit gracefully
     try:
-        repl.start()  # This will load the plugin and use a command from it
+        repl.start()
     except SystemExit:
         pass
 
-    # Check if the result is stored in the history
     history = repl.history_manager.get_history()
     assert 'square' in history
     assert '3' in history
-    assert '9' in history  # 3 squared is 9
+    assert '9' in history
