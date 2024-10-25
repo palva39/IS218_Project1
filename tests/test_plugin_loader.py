@@ -26,7 +26,7 @@ def test_reload_existing_plugin(plugin_loader):
     # Load the plugin once
     plugin_loader.load_plugin('example_plugin')
     assert 'example_plugin' in plugin_loader.plugins
-    
+
     # Load it again to ensure it doesn't cause an error
     plugin_loader.load_plugin('example_plugin')
     assert 'example_plugin' in plugin_loader.plugins
