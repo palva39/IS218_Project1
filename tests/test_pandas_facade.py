@@ -3,7 +3,6 @@ Unit tests for the PandasFacade class.
 """
 
 import pandas as pd
-import pytest
 from app.pandas_facade import PandasFacade
 
 def test_load_csv_failure(monkeypatch):
@@ -35,7 +34,6 @@ def test_save_csv_failure(monkeypatch, capsys):
 def test_concat_dataframes_with_empty_dataframe():
     """Test concatenating DataFrames when one is empty."""
     df1 = pd.DataFrame(columns=['a', 'b'])
-    df2 = pd.DataFrame({'a': [1], 'b': [2]})
 
     # Should handle empty DataFrame properly
     result = PandasFacade.concat_dataframes(df1, {'a': 1, 'b': 2})
