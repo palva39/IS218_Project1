@@ -1,5 +1,5 @@
 [run]
 omit =
     *main.py
-    tests/conftest.py
+    */site-packages/*
     tests/__init__.py
