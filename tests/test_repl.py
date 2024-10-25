@@ -102,7 +102,7 @@ def square(number):
 """)
 
     # Mock user input to load the plugin and run a command from it
-    inputs = iter(["load_plugin example_plugin", "square 3", "quit"])
+    inputs = iter(["load_plugin square", "square 3", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
