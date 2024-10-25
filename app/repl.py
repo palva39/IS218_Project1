@@ -3,6 +3,7 @@ from app.calculator import Calculator
 from app.history_manager import HistoryManager
 from app.plugin_loader import PluginLoader
 from app.logging_config import setup_logging  # Ensure logging is set up
+from app.commands import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
 
 class REPL:
     def __init__(self):
@@ -10,10 +11,10 @@ class REPL:
         self.history_manager = HistoryManager()
         self.plugin_loader = PluginLoader()
         self.commands = {
-            'add': self._add,
-            'subtract': self._subtract,
-            'multiply': self._multiply,
-            'divide': self._divide,
+              'add': AddCommand(self.calculator),
+            'subtract': SubtractCommand(self.calculator),
+            'multiply': MultiplyCommand(self.calculator),
+            'divide': DivideCommand(self.calculator),
             'history': self._show_history,
             'clear_history': self._clear_history,
             'load_plugin': self._load_plugin,
