@@ -115,3 +115,40 @@ def square(number):
     assert 'square' in history
     assert '3' in history
     assert '9' in history  # 3 squared is 9
+
+def test_invalid_calculator_command(repl, monkeypatch, capsys):
+    """Test handling an invalid calculator command in the REPL."""
+    inputs = iter(["add invalid args", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "Error" in captured.out
+    assert "could not convert string to float" in captured.out
+
+def test_unknown_plugin_function(repl, monkeypatch):
+    """Test running an unknown function from a loaded plugin."""
+    plugin_file = "app/plugins/unknown_plugin.py"
+    with open(plugin_file, "w", encoding="utf-8") as f:
+        f.write("""
+def unknown_function(number):
+    return number * 2
+""")
+
+    inputs = iter(["load_plugin unknown_plugin", "unknown_function 3", "quit"])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+
+    try:
+        repl.start()
+    except SystemExit:
+        pass
+
+    # Ensure unknown function handling doesn't break the REPL
+    history = repl.history_manager.get_history()
+    assert 'unknown_function' in history
+    assert '3' in history
+    assert '6' in history  # 3 * 2 = 6
