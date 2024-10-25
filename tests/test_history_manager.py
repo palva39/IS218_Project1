@@ -69,7 +69,7 @@ def test_invalid_record(history_manager):
     # An invalid record should not raise errors, but should not be saved
     invalid_record = {'operation': 'add', 'a': 1, 'b': None, 'result': None}
     history_manager.record(invalid_record)
-    
+
     # The history should not contain the invalid record
     history = history_manager.get_history()
     assert 'None' not in history
