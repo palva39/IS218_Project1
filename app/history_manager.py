@@ -1,4 +1,5 @@
 from app.pandas_facade import PandasFacade
+import pandas as pd
 
 class HistoryManager:
     def __init__(self, history_file='data/calculation_history.csv'):
