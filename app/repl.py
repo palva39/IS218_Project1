@@ -152,7 +152,7 @@ class REPL:
         print("history                        : Display calculation history.")
         print("clear_history                  : Clear the calculation history.")
         print("load_plugin <plugin_name>      : Load a plugin by its name.")
-        print("  factorial      power       square_root     trig        square")
+        print("  PluginNames: factorial      power       square_root     trig        square")
         print("  Example: load_plugin square_root")
         print("menu                           : Show this menu.")
         print("quit                           : Exit the REPL.")
