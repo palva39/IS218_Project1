@@ -79,18 +79,18 @@ class REPL:
                 if not func_name.startswith('_'):
                     func = getattr(plugin, func_name)
 
-                    # Make sure we use _record_and_print to record to history
+                    # Create a wrapper function that handles plugin operations and saves to history
                     def wrapped_func(*args, func=func, func_name=func_name):
                         result = func(*map(float, args))
                         a = args[0] if len(args) > 0 else None
                         b = args[1] if len(args) > 1 else None
                         
-                        # Check if _record_and_print is being called
-                        logging.info(f"Recording result for plugin command: {func_name}")
-                        
+                        # Ensure the operation is saved to history using _record_and_print
                         self._record_and_print(func_name, a, b, result)
+                        
                         return result
                     
+                    # Add the wrapped function to REPL commands
                     self.commands[func_name] = wrapped_func
                     
             print(f"Plugin '{plugin_name}' loaded successfully.")
