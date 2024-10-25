@@ -81,7 +81,7 @@ def test_load_non_existing_plugin(repl, monkeypatch, capsys):
 def test_load_plugin_command(repl, monkeypatch):
     """Test loading a plugin and running a command from it in the REPL."""
     plugin_file = "app/plugins/example_plugin.py"
-    with open(plugin_file, "w") as f:
+    with open(plugin_file, "w", encoding="utf-8") as f:
         f.write("""
 def square(number):
     return float(number) ** 2
