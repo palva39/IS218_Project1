@@ -17,24 +17,13 @@ class HistoryManager:
         self.history.to_csv(self.history_file, index=False)
 
     def record(self, record):
-        # Ensure all keys are present and values are not None
-        if all(key in record for key in ['operation', 'a', 'b', 'result']) and not any(pd.isna(value) for value in record.values()):
-            # Convert the record into a DataFrame with the correct types
-            try:
-                # Create a DataFrame row using the correct types
-                new_record = pd.DataFrame([{
-                    'operation': str(record['operation']),
-                    'a': float(record['a']),
-                    'b': float(record['b']),
-                    'result': float(record['result'])
-                }])
+        # Create a DataFrame from the record
+        new_record = pd.DataFrame([record])
 
-                # Concatenate only if the new record is valid
-                self.history = pd.concat([self.history, new_record], ignore_index=True)
-                self.save_history()
-
-            except (ValueError, TypeError) as e:
-                print(f"Error processing record: {e}")
+        # Check if the new_record is not empty before concatenating
+        if not new_record.empty and not new_record.isna().all().all():
+            self.history = pd.concat([self.history, new_record], ignore_index=True)
+            self.save_history()
 
     def get_history(self):
         return self.history.to_string(index=False)
