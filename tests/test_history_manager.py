@@ -16,7 +16,7 @@ def test_record_and_save(history_manager):
     """Test recording and saving a calculation to the history."""
     record = {'operation': 'add', 'a': 1, 'b': 2, 'result': 3}
     history_manager.record(record)
-    
+
     # Check if the history is updated
     history = history_manager.get_history()
     assert 'add' in history
@@ -29,10 +29,10 @@ def test_clear_history(history_manager):
     # Add a record first
     record = {'operation': 'subtract', 'a': 5, 'b': 3, 'result': 2}
     history_manager.record(record)
-    
+
     # Clear the history and verify it's empty
     history_manager.clear_history()
-    
+
     # Check if the DataFrame is truly empty
     assert history_manager.history.empty
 
@@ -41,7 +41,7 @@ def test_load_and_save_history(history_manager):
     # Test loading and saving functionality
     record = {'operation': 'multiply', 'a': 2, 'b': 3, 'result': 6}
     history_manager.record(record)
-    
+
     # Reload the history manager to simulate loading from file
     new_history_manager = HistoryManager(history_file=history_manager.history_file)
     history = new_history_manager.get_history()
@@ -55,7 +55,7 @@ def test_load_and_save_history(history_manager):
     # Test loading and saving functionality
     record = {'operation': 'divide', 'a': 12, 'b': 2, 'result': 6}
     history_manager.record(record)
-    
+
     # Reload the history manager to simulate loading from file
     new_history_manager = HistoryManager(history_file=history_manager.history_file)
     history = new_history_manager.get_history()
