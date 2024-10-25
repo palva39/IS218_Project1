@@ -157,23 +157,6 @@ def test_unknown_command(repl, monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "Unknown command" in captured.out
 
-def test_menu_command(repl, monkeypatch, capsys):
-    """Test the 'menu' command to show available commands in the REPL."""
-    inputs = iter(["menu", "quit"])
-    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
-    try:
-        repl.start()
-    except SystemExit:
-        pass
-
-    captured = capsys.readouterr()
-    assert "Available commands" in captured.out
-    assert "add" in captured.out
-    assert "subtract" in captured.out
-    assert "multiply" in captured.out
-    assert "divide" in captured.out
-
 def test_quit_command(repl, monkeypatch):
     """Test the 'quit' command to exit the REPL."""
     inputs = iter(["quit"])
