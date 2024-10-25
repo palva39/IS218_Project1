@@ -122,36 +122,27 @@ class REPL:
         # Basic calculation commands with usage examples
         print("\n-- Basic Calculation Commands --")
         print("add <number1> <number2>        : Add two numbers.")
-        print("  Example: add 10 5            -> Result: 15.0")
         
         print("subtract <number1> <number2>   : Subtract second number from the first.")
-        print("  Example: subtract 10 5       -> Result: 5.0")
         
         print("multiply <number1> <number2>   : Multiply two numbers.")
-        print("  Example: multiply 10 5       -> Result: 50.0")
-        
+
         print("divide <number1> <number2>     : Divide first number by the second.")
-        print("  Example: divide 10 2         -> Result: 5.0")
+    
         
         # Plugins with usage examples
         print("\n-- Plugin Commands --")
         print("power <base> <exponent>        : Raise a base number to the power of the exponent.")
-        print("  Example: power 2 3           -> Result: 8.0 (2^3)")
         
         print("factorial <number>             : Calculate the factorial of a number.")
-        print("  Example: factorial 5         -> Result: 120")
         
         print("square_root <number>           : Calculate the square root of a number.")
-        print("  Example: square_root 16      -> Result: 4.0")
         
         print("sine <angle>                   : Calculate the sine of an angle (in degrees).")
-        print("  Example: sine 30             -> Result: 0.5")
         
         print("cosine <angle>                 : Calculate the cosine of an angle (in degrees).")
-        print("  Example: cosine 60           -> Result: 0.5")
         
         print("tangent <angle>                : Calculate the tangent of an angle (in degrees).")
-        print("  Example: tangent 45          -> Result: 1.0")
         
         # Other available commands
         print("\n-- General Commands --")
