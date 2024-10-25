@@ -40,3 +40,27 @@ def test_divide_by_zero(calculator):
     divide_command = DivideCommand(calculator)
     with pytest.raises(ValueError, match="Cannot divide by zero"):
         divide_command.execute(10, 0)
+
+def test_add_command_with_invalid_args(calculator):
+    """Test AddCommand with invalid arguments."""
+    add_command = AddCommand(calculator)
+    with pytest.raises(TypeError):
+        add_command.execute('invalid', 'args')
+
+def test_subtract_command_with_invalid_args(calculator):
+    """Test SubtractCommand with invalid arguments."""
+    subtract_command = SubtractCommand(calculator)
+    with pytest.raises(TypeError):
+        subtract_command.execute('invalid', 'args')
+
+def test_multiply_command_with_invalid_args(calculator):
+    """Test MultiplyCommand with invalid arguments."""
+    multiply_command = MultiplyCommand(calculator)
+    with pytest.raises(TypeError):
+        multiply_command.execute('invalid', 'args')
+
+def test_divide_command_with_invalid_args(calculator):
+    """Test DivideCommand with invalid arguments."""
+    divide_command = DivideCommand(calculator)
+    with pytest.raises(TypeError):
+        divide_command.execute('invalid', 'args')
