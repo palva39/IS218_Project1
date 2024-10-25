@@ -132,6 +132,9 @@ class REPL:
         
         # Plugins with usage examples
         print("\n-- Plugin Commands --")
+        
+        print("square <base> <exponent>        : Raise a base number to the power of 2.")
+        
         print("power <base> <exponent>        : Raise a base number to the power of the exponent.")
         
         print("factorial <number>             : Calculate the factorial of a number.")
@@ -149,6 +152,7 @@ class REPL:
         print("history                        : Display calculation history.")
         print("clear_history                  : Clear the calculation history.")
         print("load_plugin <plugin_name>      : Load a plugin by its name.")
+        print("  factorial**power**square_root**trig**square")
         print("  Example: load_plugin square_root")
         print("menu                           : Show this menu.")
         print("quit                           : Exit the REPL.")
