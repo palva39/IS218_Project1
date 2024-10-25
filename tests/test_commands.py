@@ -44,23 +44,23 @@ def test_divide_by_zero(calculator):
 def test_add_command_with_invalid_args(calculator):
     """Test AddCommand with invalid arguments."""
     add_command = AddCommand(calculator)
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         add_command.execute('invalid', 'args')
 
 def test_subtract_command_with_invalid_args(calculator):
     """Test SubtractCommand with invalid arguments."""
     subtract_command = SubtractCommand(calculator)
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         subtract_command.execute('invalid', 'args')
 
 def test_multiply_command_with_invalid_args(calculator):
     """Test MultiplyCommand with invalid arguments."""
     multiply_command = MultiplyCommand(calculator)
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         multiply_command.execute('invalid', 'args')
 
 def test_divide_command_with_invalid_args(calculator):
     """Test DivideCommand with invalid arguments."""
     divide_command = DivideCommand(calculator)
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         divide_command.execute('invalid', 'args')
