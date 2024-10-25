@@ -88,6 +88,8 @@ class REPL:
                             # Record the plugin operation to history
                             a = args[0] if len(args) > 0 else None
                             b = args[1] if len(args) > 1 else None
+                            
+                            # Ensure proper recording to history
                             self._record_and_print(func_name, a, b, result)
                             
                             return result
@@ -95,13 +97,15 @@ class REPL:
                             logging.error(f"Error executing plugin command '{func_name}': {e}")
                             raise
                     
-                    # Add the wrapped function to REPL commands
-                    self.commands[func_name] = wrapped_func
+                    # Use a lambda to capture the current func_name and func correctly
+                    self.commands[func_name] = (lambda f=func, fn=func_name: 
+                                                lambda *args: wrapped_func(*args, func=f, func_name=fn))()
                     
             print(f"Plugin '{plugin_name}' loaded successfully.")
         except ImportError as e:
             logging.error(f"Failed to load plugin '{plugin_name}': {e}")
             print(f"Error loading plugin: {e}")
+
 
     def _menu(self):
         logging.info("Displaying available commands.")
