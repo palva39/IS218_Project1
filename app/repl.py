@@ -79,7 +79,7 @@ class REPL:
                 if not func_name.startswith('_'):
                     func = getattr(plugin, func_name)
 
-                    # Create a wrapper function that handles plugin operations and saves to history
+                    # Use default arguments to capture current func and func_name
                     def wrapped_func(*args, func=func, func_name=func_name):
                         # Convert arguments to floats and execute the plugin function
                         result = func(*map(float, args))
@@ -91,7 +91,7 @@ class REPL:
                     
                     # Add the wrapped function to REPL commands
                     self.commands[func_name] = wrapped_func
-                    
+
             print(f"Plugin '{plugin_name}' loaded successfully.")
         except ImportError as e:
             print(f"Error loading plugin: {e}")
