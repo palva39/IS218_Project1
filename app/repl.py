@@ -89,7 +89,7 @@ class REPL:
                         a = args[0] if len(args) > 0 else None
                         b = args[1] if len(args) > 1 else None
                         self._record_and_print(func_name, a, b, result)
-                        return result
+                        return result  # Return the result instead of printing it
                     
                     # Add the wrapped function to REPL commands
                     self.commands[func_name] = wrapped_func
