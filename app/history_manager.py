@@ -11,30 +11,27 @@ class HistoryManager:
             self.load_history()
 
     def load_history(self):
-        self.history = pd.read_csv(self.history_file)
+        try:
+            self.history = pd.read_csv(self.history_file)
+        except Exception as e:
+            print(f"Error loading history: {e}")
 
     def save_history(self):
-        self.history.to_csv(self.history_file, index=False)
+        try:
+            self.history.to_csv(self.history_file, index=False)
+        except Exception as e:
+            print(f"Error saving history: {e}")
 
     def record(self, record):
-        # Ensure all keys are present and values are not None
+        # Check if the record is valid
         if all(key in record for key in ['operation', 'a', 'b', 'result']) and not any(pd.isna(value) for value in record.values()):
-            # Convert the record into a DataFrame with the correct types
             try:
-                # Create a DataFrame row using the correct types
-                new_record = pd.DataFrame([{
-                    'operation': str(record['operation']),
-                    'a': float(record['a']),
-                    'b': float(record['b']),
-                    'result': float(record['result'])
-                }])
-
-                # Concatenate only if the new record is valid
+                # Create a DataFrame from the record and add it to the history
+                new_record = pd.DataFrame([record])
                 self.history = pd.concat([self.history, new_record], ignore_index=True)
                 self.save_history()
-
-            except (ValueError, TypeError) as e:
-                print(f"Error processing record: {e}")
+            except Exception as e:
+                print(f"Error recording history: {e}")
 
     def get_history(self):
         return self.history.to_string(index=False)
