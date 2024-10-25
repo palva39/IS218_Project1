@@ -102,7 +102,7 @@ def square_root(number):
 """)
 
     # Load the square_root plugin and run the square_root command
-    inputs = iter(["load_plugin square_root_plugin", "square_root 16", "quit"])
+    inputs = iter(["load_plugin square_root", "square_root 16", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     try:
