@@ -90,7 +90,7 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
 
 def test_load_plugin_and_execute(repl, monkeypatch):
     """Test loading various plugins and executing commands."""
-    plugin_file = "app/plugins/square_root.py"
+    plugin_file = "app/plugins/square_root_plugin.py"
     with open(plugin_file, "w", encoding="utf-8") as f:
         f.write("""
 import math
