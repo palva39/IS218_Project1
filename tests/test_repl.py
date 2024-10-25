@@ -15,13 +15,13 @@ def test_add_command(repl, monkeypatch):
     # Mock user input for the REPL
     inputs = iter(["add 3 4", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-
+    
     # Run the REPL and handle SystemExit gracefully
     try:
         repl.start()  # This will run the REPL once with "add 3 4"
     except SystemExit:
         pass
-    
+
     # History should have the add command
     history = repl.history_manager.get_history()
     assert 'add' in history
@@ -38,17 +38,17 @@ def test_load_plugin_command(repl, monkeypatch):
 def square(number):
     return float(number) ** 2
 """)
-    
+
     # Mock user input to load a plugin and run a command
     inputs = iter(["load_plugin example_plugin", "square 3", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
-    
+
     # Run the REPL and handle SystemExit gracefully
     try:
         repl.start()  # This will load the plugin and use a command from it
     except SystemExit:
         pass
-    
+
     # Check if the result is stored in the history
     history = repl.history_manager.get_history()
     assert 'square' in history
