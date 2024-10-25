@@ -33,7 +33,10 @@ class REPL:
 
             if command in self.commands:
                 try:
-                    self.commands[command](*args)
+                    # Execute the command and check if it returns a result
+                    result = self.commands[command](*args)
+                    if result is not None:
+                        print(f"Result: {result}")
                 except Exception as e:
                     logging.error(f"Error executing command '{command}': {e}")
                     print(f"Error: {e}")
@@ -72,12 +75,20 @@ class REPL:
     def _load_plugin(self, plugin_name):
         try:
             self.plugin_loader.load_plugin(plugin_name)
-            # Add plugin commands dynamically to REPL
             plugin = self.plugin_loader.plugins[plugin_name]
+            
+            # Dynamically add plugin functions to REPL with result printing
             for func_name in dir(plugin):
                 if not func_name.startswith('_'):
-                    # Bind the plugin function to a new REPL command
-                    self.commands[func_name] = getattr(plugin, func_name)
+                    func = getattr(plugin, func_name)
+                    
+                    # Create a wrapper function that returns the result
+                    def wrapped_func(*args, func=func):
+                        return func(*map(float, args))
+                    
+                    # Add the wrapped function to REPL commands
+                    self.commands[func_name] = wrapped_func
+                    
             print(f"Plugin '{plugin_name}' loaded successfully.")
         except ImportError as e:
             print(f"Error loading plugin: {e}")
