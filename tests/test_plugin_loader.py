@@ -30,3 +30,8 @@ def test_reload_existing_plugin(plugin_loader):
     # Load it again to ensure it doesn't cause an error
     plugin_loader.load_plugin('example_plugin')
     assert 'example_plugin' in plugin_loader.plugins
+
+def test_load_invalid_plugin(plugin_loader):
+    """Test loading an invalid plugin with unexpected errors."""
+    with pytest.raises(ImportError):
+        plugin_loader.load_plugin('invalid_plugin_with_error')
