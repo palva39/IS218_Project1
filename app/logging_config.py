@@ -18,7 +18,7 @@ def setup_logging():
             level=numeric_level,
             format=log_format,
             filename=log_file,
-            filemode='a'  # Append to the log file
+            filemode='app.logging'  # Append to the log file
         )
     else:
         logging.basicConfig(
