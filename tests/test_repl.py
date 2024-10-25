@@ -90,7 +90,7 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
 
 def test_load_plugin_command(repl, monkeypatch):
     """Test loading a plugin and running a command from it in the REPL."""
-    
+
     # Clear any previous history before starting the test
     repl.history_manager.clear_history()
 
