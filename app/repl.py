@@ -81,14 +81,19 @@ class REPL:
 
                     # Create a wrapper function that handles plugin operations and saves to history
                     def wrapped_func(*args, func=func, func_name=func_name):
-                        result = func(*map(float, args))
-                        a = args[0] if len(args) > 0 else None
-                        b = args[1] if len(args) > 1 else None
-                        
-                        # Ensure the operation is saved to history using _record_and_print
-                        self._record_and_print(func_name, a, b, result)
-                        
-                        return result
+                        try:
+                            # Convert arguments to floats and execute the plugin function
+                            result = func(*map(float, args))
+                            
+                            # Record the plugin operation to history
+                            a = args[0] if len(args) > 0 else None
+                            b = args[1] if len(args) > 1 else None
+                            self._record_and_print(func_name, a, b, result)
+                            
+                            return result
+                        except Exception as e:
+                            logging.error(f"Error executing plugin command '{func_name}': {e}")
+                            raise
                     
                     # Add the wrapped function to REPL commands
                     self.commands[func_name] = wrapped_func
