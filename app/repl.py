@@ -77,14 +77,22 @@ class REPL:
             self.plugin_loader.load_plugin(plugin_name)
             plugin = self.plugin_loader.plugins[plugin_name]
             
-            # Dynamically add plugin functions to REPL with result printing
+            # Dynamically add plugin functions to REPL with history saving
             for func_name in dir(plugin):
                 if not func_name.startswith('_'):
                     func = getattr(plugin, func_name)
-                    
-                    # Create a wrapper function that returns the result
-                    def wrapped_func(*args, func=func):
-                        return func(*map(float, args))
+
+                    # Create a wrapper function that handles plugin operations and saves to history
+                    def wrapped_func(*args, func=func, func_name=func_name):
+                        # Convert arguments to floats and execute the plugin function
+                        result = func(*map(float, args))
+                        # Record the plugin operation to history
+                        if len(args) == 1:
+                            a, b = args[0], None
+                        else:
+                            a, b = args[0], args[1]
+                        self._record_and_print(func_name, a, b, result)
+                        return result
                     
                     # Add the wrapped function to REPL commands
                     self.commands[func_name] = wrapped_func
