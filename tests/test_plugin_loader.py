@@ -13,8 +13,8 @@ def plugin_loader():
 def test_load_existing_plugin(plugin_loader):
     """Test loading an existing plugin."""
     # Assume 'example_plugin' exists in the plugins directory
-    plugin_loader.load_plugin('example_plugin')
-    assert 'example_plugin' in plugin_loader.plugins
+    plugin_loader.load_plugin('square')
+    assert 'square' in plugin_loader.plugins
 
 def test_load_non_existing_plugin(plugin_loader):
     """Test loading a non-existing plugin."""
