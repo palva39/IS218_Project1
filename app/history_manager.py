@@ -13,9 +13,15 @@ class HistoryManager:
         PandasFacade.save_csv(self.history, self.history_file)
 
     def record(self, record):
+    # Ensure the record is valid
         if all(key in record for key in ['operation', 'a', 'b', 'result']) and not any(pd.isna(value) for value in record.values()):
-            self.history = PandasFacade.concat_dataframes(self.history, record)
-            self.save_history()
+            try:
+                # Use PandasFacade to concatenate the new record with the existing history
+                self.history = PandasFacade.concat_dataframes(self.history, record)
+                self.save_history()  # Save the updated history
+            except Exception as e:
+                print(f"Error recording history: {e}")
+
 
     def get_history(self):
         return PandasFacade.get_dataframe_string(self.history)
