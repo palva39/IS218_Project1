@@ -19,13 +19,22 @@ class HistoryManager:
     def record(self, record):
         # Ensure all keys are present and values are not None
         if all(key in record for key in ['operation', 'a', 'b', 'result']) and not any(pd.isna(value) for value in record.values()):
-            # Create a DataFrame from the record with specific data types
-            new_record = pd.DataFrame([record], dtype=self.history.dtypes.to_dict())
+            # Convert the record into a DataFrame with the correct types
+            try:
+                # Create a DataFrame row using the correct types
+                new_record = pd.DataFrame([{
+                    'operation': str(record['operation']),
+                    'a': float(record['a']),
+                    'b': float(record['b']),
+                    'result': float(record['result'])
+                }])
 
-            # Concatenate only if the new record is valid
-            if not new_record.empty:
+                # Concatenate only if the new record is valid
                 self.history = pd.concat([self.history, new_record], ignore_index=True)
                 self.save_history()
+
+            except (ValueError, TypeError) as e:
+                print(f"Error processing record: {e}")
 
     def get_history(self):
         return self.history.to_string(index=False)
