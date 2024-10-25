@@ -15,14 +15,17 @@ def test_factorial():
     # Test larger numbers
     assert factorial(10) == 3628800  # 10! = 3628800
 
+    # Test string input that is a valid integer
+    assert factorial("5") == 120  # "5" should be converted to 5
+
     # Test negative number should raise an error
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Cannot calculate the factorial of a negative number."):
         factorial(-1)
 
     # Test non-integer input should raise an error
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Input must be a non-negative integer."):
         factorial(3.5)
 
-    # Test string input should raise an error
-    with pytest.raises(ValueError):
+    # Test string input that is not a valid integer should raise an error
+    with pytest.raises(ValueError, match="Input must be a non-negative integer."):
         factorial("not a number")
