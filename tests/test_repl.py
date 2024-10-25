@@ -90,6 +90,10 @@ def test_divide_by_zero_command(repl, monkeypatch, capsys):
 
 def test_load_plugin_command(repl, monkeypatch):
     """Test loading a plugin and running a command from it in the REPL."""
+
+    # Clear any previous history before starting the test
+    repl.history_manager.clear_history()
+
     plugin_file = "app/plugins/example_plugin.py"
     with open(plugin_file, "w", encoding="utf-8") as f:
         f.write("""
@@ -97,6 +101,7 @@ def square(number):
     return float(number) ** 2
 """)
 
+    # Mock user input to load the plugin and run a command from it
     inputs = iter(["load_plugin example_plugin", "square 3", "quit"])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
@@ -105,6 +110,7 @@ def square(number):
     except SystemExit:
         pass
 
+    # Verify the plugin operation is recorded
     history = repl.history_manager.get_history()
     assert 'square' in history
     assert '3' in history
