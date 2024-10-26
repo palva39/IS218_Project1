@@ -152,5 +152,7 @@ The application includes a comprehensive test suite using `pytest`. Each command
 ![cov](https://github.com/user-attachments/assets/65e15273-1916-4915-b202-4f6d10e97d44)
 
 ### Video
+https://github.com/user-attachments/assets/92e57a1c-5ae3-4f74-ac6a-24309abc1ef9
+
 
 
